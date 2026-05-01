@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Rooms — HostelMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="bi bi-door-closed text-primary"></i> Rooms</h2>
+  <a href="{{ url_for('add_room') }}" class="btn btn-primary">
+    <i class="bi bi-plus-circle"></i> Add Room
+  </a>
+</div>
+
+<!-- Filter by hostel -->
+<form method="get" class="row g-2 mb-3">
+  <div class="col-auto">
+    <select name="hostel_id" class="form-select form-select-sm" onchange="this.form.submit()">
+      <option value="">All Hostels</option>
+      {% for h in hostels %}
+      <option value="{{ h.hostel_id }}"
+              {% if selected_hostel|string == h.hostel_id|string %}selected{% endif %}>
+        {{ h.name }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+</form>
+
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead class="table-primary">
+      <tr>
+        <th>#</th><th>Hostel</th><th>Room No.</th><th>Floor</th>
+        <th>Type</th><th>Capacity</th><th>Occupied</th>
+        <th>Available</th><th>AC</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rooms %}
+      <tr class="{% if r.available == 0 %}table-danger{% elif r.available == r.capacity %}table-success{% endif %}">
+        <td>{{ r.room_id }}</td>
+        <td>{{ r.hostel_name }}</td>
+        <td class="fw-semibold">{{ r.room_number }}</td>
+        <td>{{ r.floor }}</td>
+        <td>{{ r.room_type }}</td>
+        <td>{{ r.capacity }}</td>
+        <td>{{ r.occupied }}</td>
+        <td>
+          <span class="badge bg-{% if r.available==0 %}danger{% else %}success{% endif %}">
+            {{ r.available }}
+          </span>
+        </td>
+        <td>{% if r.has_ac %}<i class="bi bi-wind text-info"></i>{% else %}—{% endif %}</td>
+        <td>
+          <a href="{{ url_for('edit_room', room_id=r.room_id) }}"
+             class="btn btn-sm btn-outline-primary me-1">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <form action="{{ url_for('delete_room', room_id=r.room_id) }}"
+                method="post" class="d-inline"
+                onsubmit="return confirm('Delete Room {{ r.room_number }}?')">
+            <button class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-trash"></i>
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="10" class="text-center text-muted">No rooms found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="text-muted small">
+  <span class="badge bg-success">Green</span> = empty &nbsp;
+  <span class="badge bg-danger">Red</span> = full
+</p>
+{% endblock %}
