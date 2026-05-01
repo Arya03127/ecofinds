@@ -53,8 +53,8 @@ HOSTELS (1) ──< ROOMS (1) ──< ALLOCATIONS >── (1) STUDENTS
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/ecofinds.git
-cd ecofinds
+git clone https://github.com/<your-username>/hostel-room-allocation.git
+cd hostel-room-allocation
 
 # 2. Create and activate virtual environment (recommended)
 python -m venv venv
