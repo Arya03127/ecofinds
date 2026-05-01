@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}New Allocation — HostelMS{% endblock %}
+
+{% block content %}
+<h2>Allocate Room to Student</h2>
+
+<div class="card shadow-sm mt-3" style="max-width:560px">
+  <div class="card-body">
+    {% if not unallocated %}
+      <div class="alert alert-info">All students are already allocated.</div>
+    {% elif not available_rooms %}
+      <div class="alert alert-warning">No rooms with available space.</div>
+    {% else %}
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Student *</label>
+        <select name="student_id" class="form-select" required>
+          <option value="">— Select Student —</option>
+          {% for s in unallocated %}
+          <option value="{{ s.student_id }}">
+            {{ s.roll_number }} — {{ s.name }} ({{ s.department }}, Yr {{ s.year }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Room *</label>
+        <select name="room_id" class="form-select" required>
+          <option value="">— Select Room —</option>
+          {% for r in available_rooms %}
+          <option value="{{ r.room_id }}">
+            {{ r.label }} | {{ r.room_type }}{% if r.has_ac %} AC{% endif %} | {{ r.available }} seat(s) free
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Check-in Date *</label>
+        <input type="date" name="check_in_date" class="form-control"
+               value="{{ '' }}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Remarks</label>
+        <textarea name="remarks" class="form-control" rows="2"></textarea>
+      </div>
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-warning text-dark">
+          <i class="bi bi-check-lg"></i> Allocate
+        </button>
+        <a href="{{ url_for('allocations') }}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

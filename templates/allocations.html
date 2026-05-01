@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Allocations — HostelMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="bi bi-calendar-check text-warning"></i> Allocations</h2>
+  <a href="{{ url_for('add_allocation') }}" class="btn btn-warning text-dark">
+    <i class="bi bi-plus-circle"></i> New Allocation
+  </a>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead class="table-warning">
+      <tr>
+        <th>#</th><th>Student</th><th>Roll No.</th>
+        <th>Hostel</th><th>Room</th>
+        <th>Check-in</th><th>Check-out</th>
+        <th>Status</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in allocations %}
+      <tr>
+        <td>{{ a.allocation_id }}</td>
+        <td class="fw-semibold">{{ a.student_name }}</td>
+        <td><code>{{ a.roll_number }}</code></td>
+        <td>{{ a.hostel_name }}</td>
+        <td>{{ a.room_number }}</td>
+        <td>{{ a.check_in_date }}</td>
+        <td>{{ a.check_out_date or '—' }}</td>
+        <td>
+          <span class="badge bg-{% if a.status=='Active' %}success{% elif a.status=='Vacated' %}secondary{% else %}info{% endif %}">
+            {{ a.status }}
+          </span>
+        </td>
+        <td>
+          {% if a.status == 'Active' %}
+          <button class="btn btn-sm btn-outline-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#vacateModal{{ a.allocation_id }}">
+            <i class="bi bi-box-arrow-right"></i> Vacate
+          </button>
+          <!-- Vacate Modal -->
+          <div class="modal fade" id="vacateModal{{ a.allocation_id }}" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Vacate Room</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ url_for('vacate_allocation', allocation_id=a.allocation_id) }}"
+                      method="post">
+                  <div class="modal-body">
+                    <p>Vacating room for <strong>{{ a.student_name }}</strong>.</p>
+                    <label class="form-label">Check-out Date</label>
+                    <input type="date" name="check_out_date" class="form-control"
+                           value="{{ '' }}">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-sm">Confirm Vacate</button>
+                    <button type="button" class="btn btn-secondary btn-sm"
+                            data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="9" class="text-center text-muted">No allocations found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

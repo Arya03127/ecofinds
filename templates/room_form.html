@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{% if room %}Edit Room{% else %}Add Room{% endif %} — HostelMS{% endblock %}
+
+{% block content %}
+<h2>{% if room %}Edit Room{% else %}Add Room{% endif %}</h2>
+
+<div class="card shadow-sm mt-3" style="max-width:540px">
+  <div class="card-body">
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Hostel *</label>
+        <select name="hostel_id" class="form-select" required>
+          <option value="">— Select Hostel —</option>
+          {% for h in hostels %}
+          <option value="{{ h.hostel_id }}"
+                  {% if room and room.hostel_id==h.hostel_id %}selected{% endif %}>
+            {{ h.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="row g-2 mb-3">
+        <div class="col">
+          <label class="form-label">Room Number *</label>
+          <input type="text" name="room_number" class="form-control"
+                 value="{{ room.room_number if room else '' }}" required maxlength="10">
+        </div>
+        <div class="col">
+          <label class="form-label">Floor *</label>
+          <input type="number" name="floor" class="form-control"
+                 value="{{ room.floor if room else 1 }}" min="1" max="20" required>
+        </div>
+      </div>
+      <div class="row g-2 mb-3">
+        <div class="col">
+          <label class="form-label">Capacity *</label>
+          <input type="number" name="capacity" class="form-control"
+                 value="{{ room.capacity if room else 2 }}" min="1" max="20" required>
+        </div>
+        <div class="col">
+          <label class="form-label">Room Type *</label>
+          <select name="room_type" class="form-select" required>
+            {% for rt in ['Single','Double','Triple','Dormitory'] %}
+            <option value="{{ rt }}"
+                    {% if room and room.room_type==rt %}selected{% endif %}>{{ rt }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" name="has_ac" id="has_ac" class="form-check-input"
+               {% if room and room.has_ac %}checked{% endif %}>
+        <label class="form-check-label" for="has_ac">Air Conditioned (AC)</label>
+      </div>
+      {% if room %}
+      <div class="mb-3 form-check">
+        <input type="checkbox" name="is_active" id="is_active" class="form-check-input"
+               {% if room.is_active %}checked{% endif %}>
+        <label class="form-check-label" for="is_active">Active</label>
+      </div>
+      {% endif %}
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check-lg"></i> Save
+        </button>
+        <a href="{{ url_for('rooms') }}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Hostel Room Allocation{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="{{ url_for('dashboard') }}">
+      <i class="bi bi-building"></i> HostelMS
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}"
+             href="{{ url_for('dashboard') }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if 'hostel' in request.endpoint %}active{% endif %}"
+             href="{{ url_for('hostels') }}"><i class="bi bi-building"></i> Hostels</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if 'room' in request.endpoint %}active{% endif %}"
+             href="{{ url_for('rooms') }}"><i class="bi bi-door-closed"></i> Rooms</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if 'student' in request.endpoint %}active{% endif %}"
+             href="{{ url_for('students') }}"><i class="bi bi-people"></i> Students</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if 'allocation' in request.endpoint %}active{% endif %}"
+             href="{{ url_for('allocations') }}"><i class="bi bi-calendar-check"></i> Allocations</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'reports' %}active{% endif %}"
+             href="{{ url_for('reports') }}"><i class="bi bi-bar-chart"></i> Reports</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Flash messages -->
+<div class="container mt-3">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="alert alert-{{ cat }} alert-dismissible fade show" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endwith %}
+</div>
+
+<!-- Page content -->
+<div class="container my-4">
+  {% block content %}{% endblock %}
+</div>
+
+<footer class="text-center text-muted py-3 border-top mt-5">
+  <small>Hostel Room Allocation System &mdash; DBMS Project &copy; 2025</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+/* Hostel Room Allocation System — custom styles */
+
+body {
+  background-color: #f8f9fa;
+}
+
+.navbar-brand {
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+}
+
+.card {
+  border-radius: 0.6rem;
+}
+
+.table th {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.badge {
+  font-size: 0.75rem;
+}
+
+footer {
+  font-size: 0.82rem;
+}
