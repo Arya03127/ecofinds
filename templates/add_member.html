@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Add Member</h2>
+<form method="post">
+    <label>Full Name<input type="text" name="full_name" required></label>
+    <label>Email<input type="email" name="email" required></label>
+    <label>Phone<input type="text" name="phone"></label>
+    <label>Joined On<input type="date" name="joined_on" value="{{ today }}" required></label>
+    <button type="submit">Save Member</button>
+</form>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Add Membership</h2>
+<form method="post">
+    <label>Member
+        <select name="member_id" required>
+            <option value="">Select Member</option>
+            {% for member in members %}
+                <option value="{{ member.id }}">{{ member.full_name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Plan
+        <select name="plan_id" required>
+            <option value="">Select Plan</option>
+            {% for plan in plans %}
+                <option value="{{ plan.id }}">{{ plan.plan_name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Start Date<input type="date" name="start_date" value="{{ today }}" required></label>
+    <label>End Date<input type="date" name="end_date" value="{{ today }}" required></label>
+    <label>Status
+        <select name="status" required>
+            <option value="Active">Active</option>
+            <option value="Expired">Expired</option>
+            <option value="Paused">Paused</option>
+        </select>
+    </label>
+    <button type="submit">Save Membership</button>
+</form>
+{% endblock %}

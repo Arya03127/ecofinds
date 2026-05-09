@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="stats">
+    <div class="card"><h3>Members</h3><p>{{ counts.members }}</p></div>
+    <div class="card"><h3>Plans</h3><p>{{ counts.plans }}</p></div>
+    <div class="card"><h3>Memberships</h3><p>{{ counts.memberships }}</p></div>
+    <div class="card"><h3>Payments</h3><p>{{ counts.payments }}</p></div>
+</section>
+
+<section>
+    <h2>Recent Memberships</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Member</th>
+                <th>Plan</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in recent_memberships %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.full_name }}</td>
+                <td>{{ row.plan_name }}</td>
+                <td>{{ row.start_date }}</td>
+                <td>{{ row.end_date }}</td>
+                <td>{{ row.status }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">No memberships yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
