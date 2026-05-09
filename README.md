@@ -22,7 +22,7 @@ A small Flask + SQLite app for tracking gym members, plans, memberships, and pay
 
 ## Setup
 ```bash
-cd /home/runner/work/ecofinds/ecofinds
+cd ecofinds
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 ## Run
 ```bash
-cd /home/runner/work/ecofinds/ecofinds
+cd ecofinds
 source .venv/bin/activate
 python app.py
 ```

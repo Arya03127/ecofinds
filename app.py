@@ -1,4 +1,6 @@
 from datetime import date
+import os
+import secrets
 import sqlite3
 from pathlib import Path
 
@@ -9,7 +11,7 @@ DB_PATH = BASE_DIR / "gym_tracker.db"
 SCHEMA_PATH = BASE_DIR / "schema.sql"
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "change-me-for-production"
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", secrets.token_hex(32))
 
 
 def get_db() -> sqlite3.Connection:
@@ -31,11 +33,6 @@ def init_db() -> None:
     with open(SCHEMA_PATH, "r", encoding="utf-8") as schema:
         db.executescript(schema.read())
     db.commit()
-
-
-@app.before_request
-def ensure_db_ready() -> None:
-    init_db()
 
 
 @app.route("/")
@@ -229,5 +226,9 @@ def add_payment():
     return render_template("add_payment.html", memberships=memberships_list, today=str(date.today()))
 
 
+with app.app_context():
+    init_db()
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.getenv("FLASK_DEBUG") == "1")
