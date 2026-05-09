@@ -11,7 +11,12 @@ DB_PATH = BASE_DIR / "gym_tracker.db"
 SCHEMA_PATH = BASE_DIR / "schema.sql"
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", secrets.token_hex(32))
+configured_secret = os.getenv("SECRET_KEY")
+app.config["SECRET_KEY"] = configured_secret or secrets.token_hex(32)
+if not configured_secret:
+    app.logger.warning(
+        "SECRET_KEY is not set. A temporary key is being used and sessions will reset on restart."
+    )
 
 
 def get_db() -> sqlite3.Connection:
@@ -111,10 +116,17 @@ def add_plan():
             flash("All fields are required.", "error")
             return redirect(url_for("add_plan"))
 
+        try:
+            parsed_duration = int(duration_months)
+            parsed_fee = float(fee)
+        except ValueError:
+            flash("Duration must be a whole number and fee must be numeric.", "error")
+            return redirect(url_for("add_plan"))
+
         db = get_db()
         db.execute(
             "INSERT INTO plans (plan_name, duration_months, fee) VALUES (?, ?, ?)",
-            (plan_name, int(duration_months), float(fee)),
+            (plan_name, parsed_duration, parsed_fee),
         )
         db.commit()
         flash("Plan added successfully.", "success")
@@ -154,12 +166,19 @@ def add_membership():
             flash("Member and plan are required.", "error")
             return redirect(url_for("add_membership"))
 
+        try:
+            parsed_member_id = int(member_id)
+            parsed_plan_id = int(plan_id)
+        except ValueError:
+            flash("Selected member and plan are invalid.", "error")
+            return redirect(url_for("add_membership"))
+
         db.execute(
             """
             INSERT INTO memberships (member_id, plan_id, start_date, end_date, status)
             VALUES (?, ?, ?, ?, ?)
             """,
-            (int(member_id), int(plan_id), start_date, end_date, status),
+            (parsed_member_id, parsed_plan_id, start_date, end_date, status),
         )
         db.commit()
         flash("Membership added successfully.", "success")
@@ -212,12 +231,19 @@ def add_payment():
             flash("Membership, amount and mode are required.", "error")
             return redirect(url_for("add_payment"))
 
+        try:
+            parsed_membership_id = int(membership_id)
+            parsed_amount = float(amount)
+        except ValueError:
+            flash("Membership must be valid and amount must be numeric.", "error")
+            return redirect(url_for("add_payment"))
+
         db.execute(
             """
             INSERT INTO payments (membership_id, amount, paid_on, payment_mode, notes)
             VALUES (?, ?, ?, ?, ?)
             """,
-            (int(membership_id), float(amount), paid_on, payment_mode, notes),
+            (parsed_membership_id, parsed_amount, paid_on, payment_mode, notes),
         )
         db.commit()
         flash("Payment recorded successfully.", "success")

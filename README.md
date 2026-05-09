@@ -22,7 +22,7 @@ A small Flask + SQLite app for tracking gym members, plans, memberships, and pay
 
 ## Setup
 ```bash
-cd ecofinds
+cd <project-folder>
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -30,8 +30,9 @@ pip install -r requirements.txt
 
 ## Run
 ```bash
-cd ecofinds
+cd <project-folder>
 source .venv/bin/activate
+export SECRET_KEY="your-strong-secret-key"
 python app.py
 ```
 
