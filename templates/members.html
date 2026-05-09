@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Members</h2>
+<a class="button" href="{{ url_for('add_member') }}">Add Member</a>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Joined On</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for member in members %}
+        <tr>
+            <td>{{ member.id }}</td>
+            <td>{{ member.full_name }}</td>
+            <td>{{ member.email }}</td>
+            <td>{{ member.phone }}</td>
+            <td>{{ member.joined_on }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="5">No members found.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

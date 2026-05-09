@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Memberships</h2>
+<a class="button" href="{{ url_for('add_membership') }}">Add Membership</a>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Member</th>
+            <th>Plan</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for row in memberships %}
+        <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.full_name }}</td>
+            <td>{{ row.plan_name }}</td>
+            <td>{{ row.start_date }}</td>
+            <td>{{ row.end_date }}</td>
+            <td>{{ row.status }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="6">No memberships found.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
